@@ -102,6 +102,9 @@ public class LoginController {
         //세션에 회원 정보 보관
         session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
 
+        // 특정 세션 단위로 시간 설정
+        session.setMaxInactiveInterval(1800); //1800초 (60분)
+
         return "redirect:/";
     }
 
