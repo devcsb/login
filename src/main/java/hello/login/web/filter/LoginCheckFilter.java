@@ -64,5 +64,3 @@ public class LoginCheckFilter implements Filter {
  * 해당 객체가 다음 필터 또는 서블릿에서 사용된다.
  * 이는 스프링 인터셉터는 제공하지 않는 기능이다.
  */
-
-

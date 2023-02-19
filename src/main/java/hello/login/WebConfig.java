@@ -2,14 +2,28 @@ package hello.login;
 
 import hello.login.web.filter.LogFilter;
 import hello.login.web.filter.LoginCheckFilter;
+import hello.login.web.interceptor.LogInterceptor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.Filter;
 
 @Configuration
-public class WebConfig {
+public class WebConfig implements WebMvcConfigurer { // 인터셉터 등록을 위해 WebMvcConfigurer 구현.
+
+    /**
+     * 인터셉터 등록.
+     */
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new LogInterceptor())
+                .order(1)  //순서
+                .addPathPatterns("/**") // 적용 패턴
+                .excludePathPatterns("/css/**", "/*.ico", "/error"); // 제외 패턴
+    }
 
     /**
      * FilterRegistrationBean을 사용해서 필터를 등록한다.
@@ -17,7 +31,7 @@ public class WebConfig {
      * /@ServletComponentScan @WebFilter(filterName = "logFilter", urlPatterns = "/*") 로
      * 필터 등록이 가능하지만 필터 순서 조절이 안된다. 따라서 FilterRegistrationBean 을 사용하자.
      */
-    @Bean
+//    @Bean
     public FilterRegistrationBean logFilter() {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(new LogFilter()); // 등록할 필터를 지정.
@@ -27,7 +41,7 @@ public class WebConfig {
         return filterRegistrationBean;
     }
 
-    @Bean
+//    @Bean
     public FilterRegistrationBean loginCheckFilter() {
         FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
         filterRegistrationBean.setFilter(new LoginCheckFilter());
